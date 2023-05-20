@@ -7,16 +7,22 @@ from PIL import Image
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("dark-blue")
 
+
+
 class ScrollableFrameFriends(customtkinter.CTkScrollableFrame):
-    friends_name = []
-    friend_status = []
     padx=30
     pady=0
     
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
         
-    
+    def clear(self):
+        for widget in self.winfo_children():
+            widget.destroy()
+            
+        self.padx=30
+        self.pady=0
+            
     def add_friend(self, name, status, image_path):
         # PLACE PROFILE ICON
         self.profile_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "profile_icon.png")), size=(30, 30))
@@ -41,6 +47,12 @@ class ScrollableFrameUpcoming(customtkinter.CTkScrollableFrame):
         super().__init__(master, **kwargs)
         
     
+    def clear(self):
+        for widget in self.winfo_children():
+            widget.destroy()
+        self.padx=30
+        self.pady=0
+    
 class ScrollableFrameMovies(customtkinter.CTkScrollableFrame):
     image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "images")
     padx = 0
@@ -56,6 +68,11 @@ class ScrollableFrameMovies(customtkinter.CTkScrollableFrame):
         self.add_item()
         self.add_item()
         self.add_item()
+    
+    def clear(self):
+        for widget in self.winfo_children():
+            widget.destroy()
+        self.padx=0
         
     def add_item(self):
         self.movie_image = customtkinter.CTkImage(Image.open(os.path.join(self.image_path, "image_not_found_icon.jpg")), size=(100, 150))
@@ -86,8 +103,40 @@ class ScrollableFrame(customtkinter.CTkScrollableFrame):
         # INCREASE PADDING IN Y
         self.pady += 210
         
-    
+    def clear(self):
+        for widget in self.winfo_children():
+            widget.destroy()
+            
+        self.padx=0
+        self.pady=0
 
+class ScrollableFrameSearch(customtkinter.CTkScrollableFrame):
+    image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "images")
+    pady=0
+    
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+        self.add_item("Lord Of The Ring: Fellowship Of The Ring")
+        self.add_item("Lord Of The Ring: The Two Towers")
+        
+        
+    def add_item(self,name):
+        self.movie_image = customtkinter.CTkImage(Image.open(os.path.join(self.image_path, "image_not_found_icon.jpg")), size=(50, 75))
+        self.movie_image_label = customtkinter.CTkLabel(self, text="", image=self.movie_image)
+        self.movie_image_label.grid(row=0, column=0, sticky="nw", padx=5, pady=self.pady+5)
+       
+        self.movie_name_label = customtkinter.CTkLabel(self, text=name, font=customtkinter.CTkFont(size=10), text_color="gray75", width=50, height=75, wraplength=120, justify="left")
+        self.movie_name_label.grid(row=0, column=0, sticky="nw", padx=75, pady=self.pady+5) 
+        
+        self.pady += 80
+        
+    def clear(self):
+        for widget in self.winfo_children():
+            widget.destroy()
+            
+        self.pady=0
+        
+        
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
@@ -116,7 +165,8 @@ class App(customtkinter.CTk):
                                                                fg_color="gray13" )
         self.scrollable_frame_Upcoming = ScrollableFrameUpcoming(self.upcoming_frame, width=538, height=260, corner_radius=0, 
                                                                  fg_color="gray13")
-        self.search_field_frame = customtkinter.CTkFrame(self.main_frame, width=210, height=20, corner_radius=5)
+        self.search_field_frame = customtkinter.CTkFrame(self.main_frame, width=210, height=20, corner_radius=5, fg_color="transparent")
+        self.scrollable_search_frame = 0
 
         # BUTTONS
         self.home_button = customtkinter.CTkButton(self.navigation_menu, corner_radius=0, text="Home", text_color=("gray10", "gray90"), 
@@ -160,6 +210,7 @@ class App(customtkinter.CTk):
         self.scrollable_frame_Upcoming.grid(row=0, column=0, sticky="se", pady=40, padx=2)
         self.search_field_frame.grid(row=0, column=0, sticky="nw", padx=640, pady=30)
         
+        
         # BUTTONS
         self.home_button.grid(row=0, column=0)
         self.movies_button.grid(row=0, column=1)
@@ -185,6 +236,7 @@ class App(customtkinter.CTk):
         self.scrollable_frame_friends.bind("<Button-1>",self.remove_focus)
         self.scrollable_frame_Upcoming.bind("<Button-1>",self.remove_focus)
         self.search_field.bind("<Button-1>",self.clear_search_field)
+        self.search_field.bind("<Key>", self.key_pressed)
         
         
         # ADD ITEMS TO OBJECTS
@@ -207,6 +259,10 @@ class App(customtkinter.CTk):
         self.movies_button.configure(fg_color="transparent")
         self.series_button.configure(fg_color="transparent")
         self.watchlist_button.configure(fg_color="transparent")
+        
+        self.scrollable_frame.clear()
+        self.scrollable_frame.add_item("Continue Watching")
+        self.scrollable_frame.add_item("Watch Again")
 
     def movies_button_event(self):
         self.movies_button.configure(fg_color=("gray75", "gray25"))
@@ -214,11 +270,21 @@ class App(customtkinter.CTk):
         self.series_button.configure(fg_color="transparent")
         self.watchlist_button.configure(fg_color="transparent")
         
+        self.scrollable_frame.clear()
+        self.scrollable_frame.add_item("Popular")
+        self.scrollable_frame.add_item("Horror")
+        self.scrollable_frame.add_item("Mystery")
+        
     def series_button_event(self):
         self.series_button.configure(fg_color=("gray75", "gray25"))
         self.home_button.configure(fg_color="transparent")
         self.movies_button.configure(fg_color="transparent")
         self.watchlist_button.configure(fg_color="transparent")
+        
+        self.scrollable_frame.clear()
+        self.scrollable_frame.add_item("Thriller")
+        self.scrollable_frame.add_item("Drama")
+        self.scrollable_frame.add_item("Romantic")
             
     def watchlist_button_event(self):
         self.watchlist_button.configure(fg_color=("gray75", "gray25"))
@@ -226,11 +292,32 @@ class App(customtkinter.CTk):
         self.movies_button.configure(fg_color="transparent")
         self.series_button.configure(fg_color="transparent")
         
+        self.scrollable_frame.clear()
+        self.scrollable_frame.add_item("Action")
+        self.scrollable_frame.add_item("Sci-fi")
+        self.scrollable_frame.add_item("Top Rated")
+        
     def clear_search_field(self,e):
         self.search_field.delete("current linestart","current lineend")
     
     def remove_focus(self,e):
         self.focus()
+    
+    def key_pressed(self,e):
+        if len(self.search_field.get("current linestart","current lineend")) == 1 and ord(e.char) == 8:
+            if self.scrollable_search_frame:
+                self.scrollable_search_frame.grid_forget()
+                self.scrollable_search_frame.destroy()
+                self.scrollable_search_frame = 0
+        elif not (self.search_field.get("current linestart","current lineend") == "" and ord(e.char) == 8):
+            if not self.scrollable_search_frame:
+                self.scrollable_search_frame = ScrollableFrameSearch(self.main_frame, width=194, height=150, corner_radius=0,
+                                                                    scrollbar_button_color="gray13", scrollbar_button_hover_color="gray13")
+                self.scrollable_search_frame.grid(row=0, column=0, sticky="nw", padx=640, pady=68)
+            else:
+                self.scrollable_search_frame.clear()
+                self.scrollable_search_frame.add_item("Harry Potter")
+                
         
 
 app = App()
