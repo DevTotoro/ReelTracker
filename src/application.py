@@ -1,8 +1,8 @@
 import customtkinter as ctk
 
-from views.root import BaseRootView, LoginView, RegisterView, MainView
+from src.views.root import BaseRootView, LoginView, RegisterView, MainView
 
-from services.theme import Theme
+from src.services import Theme
 
 
 class Application(ctk.CTk):
