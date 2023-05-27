@@ -10,6 +10,7 @@ class Color:
     SLATE_100 = '#f1f5f9'
     SLATE_700 = '#334155'
     SLATE_800 = '#1e293b'
+    SLATE_900 = '#0f172a'
 
     # Teal
     TEAL_400 = '#2dd4bf'

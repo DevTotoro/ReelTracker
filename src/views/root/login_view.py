@@ -1,10 +1,10 @@
-import customtkinter as ctk
+from customtkinter import CTk as ctkWindow
 from .base_root_view import BaseRootView
-from src.widgets import Button, Entry
+from src.widgets import Frame, Label, Entry, Button
 
 
 class LoginView(BaseRootView):
-    def __init__(self, master: ctk.CTk, on_login_success: callable, on_register_clicked: callable):
+    def __init__(self, master: ctkWindow, on_login_success: callable, on_register_clicked: callable):
         super().__init__(master=master)
 
         self.__on_login_success = on_login_success
@@ -17,11 +17,11 @@ class LoginView(BaseRootView):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        center_frame = ctk.CTkFrame(master=self, fg_color='transparent')
+        center_frame = Frame(master=self, fg_color='transparent')
         center_frame.grid(row=0, column=0)
 
         # Title
-        ctk.CTkLabel(master=center_frame, text='Login', font=('Arial', 24, 'bold')) \
+        Label(master=center_frame, text='Login', font=('Arial', 24, 'bold')) \
             .grid(row=0, column=0, pady=40, sticky='ew')
 
         # Input fields
@@ -32,10 +32,7 @@ class LoginView(BaseRootView):
         self.__password_input.grid(row=2, column=0, pady=5, sticky='ew')
 
         # Feedback label
-        self.__feedback_label = ctk.CTkLabel(
-            master=center_frame,
-            text='We will never share your information with anyone.'
-        )
+        self.__feedback_label = Label(master=center_frame, text='We will never share your information with anyone.')
         self.__feedback_label.grid(row=3, column=0, pady=5, sticky='ew')
 
         # Login button

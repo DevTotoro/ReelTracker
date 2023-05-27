@@ -14,6 +14,7 @@ class Button(ctk.CTkButton):
             font=('Arial', 16, 'bold'),
             fg_color=Color.TEAL_500,
             hover_color=Color.TEAL_400,
+            text_color=Color.WHITE,
             height=40,
             corner_radius=50
         )
