@@ -1,9 +1,10 @@
+from services.theme import AppearanceMode, ColorTheme, Theme
+
 import tkinter as tk
 import customtkinter as ctk
 
 if __name__ == '__main__':
-    ctk.set_appearance_mode('system')
-    ctk.set_default_color_theme('dark-blue')
+    theme = Theme(appearance_mode=AppearanceMode.SYSTEM, color_theme=ColorTheme.DARK_BLUE)
 
     root = ctk.CTk()
 
