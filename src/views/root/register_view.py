@@ -1,6 +1,7 @@
 from customtkinter import CTk as ctkWindow
 from .base_root_view import BaseRootView
 from src.widgets import Frame, Label, Entry, Button
+from src.services import async_get
 
 
 class RegisterView(BaseRootView):
@@ -20,8 +21,8 @@ class RegisterView(BaseRootView):
         center_frame = Frame(master=self, fg_color='transparent')
         center_frame.grid(row=0, column=0)
 
-        # Title
-        Label(master=center_frame, text='Register', font=('Arial', 24, 'bold')) \
+        # Title (Also configures the width of the frame)
+        Label(master=center_frame, text='Register', font=('Arial', 24, 'bold'), width=400) \
             .grid(row=0, column=0, pady=40, sticky='ew')
 
         # Input fields
@@ -48,4 +49,14 @@ class RegisterView(BaseRootView):
 
     # Callbacks
     def __on_register_clicked(self) -> None:
+        self.__feedback_label.configure(text='Creating your account...')
+
+        async_get(
+            url='https://reeltracker-server-production.up.railway.app/',
+            callback=self.__on_register_request_complete
+        )
+
+    def __on_register_request_complete(self, response) -> None:
+        print(response)
+
         self.__on_register_success()
