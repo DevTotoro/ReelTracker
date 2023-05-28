@@ -7,10 +7,8 @@ class MainView(BaseRootView):
     def __init__(self, master: ctkWindow):
         super().__init__(master=master)
 
-        self.__setup_ui()
-
     # Private methods
-    def __setup_ui(self) -> None:
+    def _setup_ui(self) -> None:
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 

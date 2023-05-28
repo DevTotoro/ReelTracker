@@ -1,6 +1,6 @@
 from tkinter import CENTER as TK_CENTER
 import customtkinter as ctk
-from abc import ABC
+from abc import ABC, abstractmethod
 
 from src.services import Color
 
@@ -12,8 +12,14 @@ class BaseRootView(ctk.CTkFrame, ABC):
 
         self.configure(fg_color=(Color.WHITE, Color.SLATE_800))
 
+        self._setup_ui()
+
     def show(self):
         self.place(relx=0.5, rely=0.5, anchor=TK_CENTER, relwidth=1, relheight=1)
 
     def hide(self):
         self.place_forget()
+
+    @abstractmethod
+    def _setup_ui(self):
+        pass

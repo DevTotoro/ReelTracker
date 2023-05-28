@@ -6,15 +6,13 @@ from src.services import async_get
 
 class LoginView(BaseRootView):
     def __init__(self, master: ctkWindow, on_login_success: callable, on_register_clicked: callable):
-        super().__init__(master=master)
-
         self.__on_login_success = on_login_success
         self.__on_register_clicked = on_register_clicked
 
-        self.__setup_ui()
+        super().__init__(master=master)
 
     # Private methods
-    def __setup_ui(self) -> None:
+    def _setup_ui(self) -> None:
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
