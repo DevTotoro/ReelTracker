@@ -2,6 +2,9 @@ from enum import Enum
 
 
 class Color:
+    # The colors are based on the Tailwind CSS color palette
+    # https://tailwindcss.com/docs/customizing-colors
+
     WHITE = '#ffffff'
     BLACK = '#000000'
 
