@@ -2,8 +2,6 @@ import customtkinter as ctk
 
 from src.views.root import BaseRootView, LoginView, RegisterView, MainView
 
-from src.services import Theme
-
 
 class Application(ctk.CTk):
     def __init__(
@@ -11,12 +9,9 @@ class Application(ctk.CTk):
             title: str = 'App',
             width: int = 300,
             height: int = 300,
-            resizable: bool = False,
-            theme: Theme = Theme()
+            resizable: bool = False
     ):
         super().__init__()
-
-        self.__theme = theme
 
         self.title(title)
         self.geometry(f'{width}x{height}')
