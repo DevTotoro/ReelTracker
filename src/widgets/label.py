@@ -11,5 +11,5 @@ class Label(ctk.CTkLabel):
     # Private methods
     def __setup_ui(self) -> None:
         self.configure(
-            text_color=(Color.SLATE_900, Color.WHITE)
+            text_color=(Color.SLATE_900.value, Color.WHITE.value)
         )

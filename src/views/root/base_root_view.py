@@ -10,7 +10,7 @@ class BaseRootView(ctk.CTkFrame, ABC):
     def __init__(self, master: ctk.CTk):
         super().__init__(master=master)
 
-        self.configure(fg_color=(Color.WHITE, Color.SLATE_800))
+        self.configure(fg_color=(Color.WHITE.value, Color.SLATE_800.value))
 
         self._setup_ui()
 

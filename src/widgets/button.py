@@ -12,9 +12,9 @@ class Button(ctk.CTkButton):
     def __setup_ui(self) -> None:
         self.configure(
             font=('Arial', 16, 'bold'),
-            fg_color=Color.TEAL_500,
-            hover_color=Color.TEAL_400,
-            text_color=Color.WHITE,
+            fg_color=Color.TEAL_500.value,
+            hover_color=Color.TEAL_400.value,
+            text_color=Color.WHITE.value,
             height=40,
             corner_radius=50
         )

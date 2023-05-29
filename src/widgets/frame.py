@@ -1,5 +1,4 @@
 import customtkinter as ctk
-from src.services import Color
 
 
 class Frame(ctk.CTkFrame):

@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Color:
+class Color(Enum):
     # The colors are based on the Tailwind CSS color palette
     # https://tailwindcss.com/docs/customizing-colors
 

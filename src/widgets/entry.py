@@ -12,7 +12,7 @@ class Entry(ctk.CTkEntry):
     def __setup_ui(self) -> None:
         self.configure(
             font=('Arial', 16, 'bold'),
-            fg_color=(Color.SLATE_100, Color.SLATE_700),
+            fg_color=(Color.SLATE_100.value, Color.SLATE_700.value),
             height=40,
             border_width=0,
             corner_radius=50
