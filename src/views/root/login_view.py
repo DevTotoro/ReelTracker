@@ -1,13 +1,17 @@
 from customtkinter import CTk as ctkWindow
+from os import getenv
 from .base_root_view import BaseRootView
 from src.widgets import Frame, Label, Entry, Button
-from src.services import async_get
+from src.services import async_post
+from src.models import User
 
 
 class LoginView(BaseRootView):
-    def __init__(self, master: ctkWindow, on_login_success: callable, on_register_clicked: callable):
+    def __init__(self, master: ctkWindow, user: User, on_login_success: callable, on_register_clicked: callable):
         self.__on_login_success = on_login_success
         self.__on_register_clicked = on_register_clicked
+
+        self.__user = user
 
         super().__init__(master=master)
 
@@ -46,9 +50,28 @@ class LoginView(BaseRootView):
     def __on_login_clicked(self) -> None:
         self.__feedback_label.configure(text='Logging in...')
 
-        async_get(url='https://reeltracker-server-production.up.railway.app/', callback=self.__on_login_request_complete)
+        async_post(
+            url=f'{getenv("API_URL")}/auth/login',
+            json={
+                'username': self.__username_input.get(),
+                'password': self.__password_input.get()
+            },
+            callback=self.__on_login_request_complete
+        )
 
     def __on_login_request_complete(self, response) -> None:
-        print(response)
+        # TODO: Handle errors
 
-        self.__on_login_success()
+        match response.status_code:
+            case 200:
+                self.__feedback_label.configure(text='Login successful!', text_color='green')
+
+                self.__user.login(response.json()['token'])
+
+                self.__on_login_success()
+            case 400:
+                self.__feedback_label.configure(text=response.json()['error'], text_color='red')
+            case 401:
+                self.__feedback_label.configure(text=response.json()['error'], text_color='red')
+            case _:
+                self.__feedback_label.configure(text='An unknown error occurred.', text_color='red')

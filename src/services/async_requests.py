@@ -11,9 +11,9 @@ def async_get(url: str, params: dict = None, headers: dict = None, callback: cal
     th.Thread(target=__get).start()
 
 
-def async_post(url: str, data: dict = None, headers: dict = None, callback: callable = None) -> None:
+def async_post(url: str, json: dict = None, headers: dict = None, callback: callable = None) -> None:
     def __post() -> None:
-        response = req.post(url, data=data, headers=headers)
+        response = req.post(url, json=json, headers=headers)
         if callback is not None:
             callback(response)
 

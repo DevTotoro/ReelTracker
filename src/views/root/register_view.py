@@ -1,7 +1,8 @@
 from customtkinter import CTk as ctkWindow
+from os import getenv
 from .base_root_view import BaseRootView
 from src.widgets import Frame, Label, Entry, Button
-from src.services import async_get
+from src.services import async_post
 
 
 class RegisterView(BaseRootView):
@@ -49,12 +50,29 @@ class RegisterView(BaseRootView):
     def __on_register_clicked(self) -> None:
         self.__feedback_label.configure(text='Creating your account...')
 
-        async_get(
-            url='https://reeltracker-server-production.up.railway.app/',
+        async_post(
+            url=f'{getenv("API_URL")}/auth/register',
+            json={
+                'email': self.__email_input.get(),
+                'username': self.__username_input.get(),
+                'password': self.__password_input.get()
+            },
             callback=self.__on_register_request_complete
         )
 
     def __on_register_request_complete(self, response) -> None:
-        print(response)
+        # TODO: Handle errors
 
-        self.__on_register_success()
+        match response.status_code:
+            case 201:
+                self.__feedback_label.configure(text='Account created successfully.', text_color='green')
+
+                self.__on_register_success()
+            case 400:
+                self.__feedback_label.configure(text=response.json()['error'], text_color='red')
+            case 409:
+                self.__feedback_label.configure(text=response.json()['error'], text_color='red')
+            case 500:
+                self.__feedback_label.configure(text=response.json()['error'], text_color='red')
+            case _:
+                self.__feedback_label.configure(text='An unknown error occurred.', text_color='red')

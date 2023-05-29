@@ -1,11 +1,14 @@
 from customtkinter import CTk as ctkWindow
 from .base_root_view import BaseRootView
 from src.widgets import Frame, Label
+from src.models import User
 
 
 class MainView(BaseRootView):
-    def __init__(self, master: ctkWindow):
+    def __init__(self, master: ctkWindow, user: User):
         super().__init__(master=master)
+
+        self.__user = user
 
     # Private methods
     def _setup_ui(self) -> None:

@@ -1,6 +1,7 @@
 import customtkinter as ctk
 
 from src.views.root import BaseRootView, LoginView, RegisterView, MainView
+from src.models import User
 
 
 class Application(ctk.CTk):
@@ -12,6 +13,9 @@ class Application(ctk.CTk):
             resizable: bool = False
     ):
         super().__init__()
+
+        # Global user
+        self.__user = User()
 
         self.title(title)
         self.geometry(f'{width}x{height}')
@@ -32,15 +36,16 @@ class Application(ctk.CTk):
         self.__root_views = {
             'login': LoginView(
                 master=self,
+                user=self.__user,
                 on_login_success=lambda: self.__show_root_view(self.__root_views['main']),
                 on_register_clicked=lambda: self.__show_root_view(self.__root_views['register'])
             ),
             'register': RegisterView(
                 master=self,
-                on_register_success=lambda: self.__show_root_view(self.__root_views['main']),
+                on_register_success=lambda: self.__show_root_view(self.__root_views['login']),
                 on_login_clicked=lambda: self.__show_root_view(self.__root_views['login'])
             ),
-            'main': MainView(master=self)
+            'main': MainView(master=self, user=self.__user)
         }
 
     def __show_root_view(self, view: BaseRootView) -> None:
