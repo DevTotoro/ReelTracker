@@ -92,7 +92,8 @@ class MovieApi:
                         image = Image.open(BytesIO(image_response.content))
                         if frame:
                             # add image to frame
-                            frame.add_item(title, image)
+                            if not exit_flag.isSet():
+                                frame.add_item(title, image)
                 # if i >= end or exit flag is set
                 elif i>= end or exit_flag.isSet():
                     return
