@@ -1,6 +1,7 @@
 import requests
-from PIL import Image
+from PIL import Image as img
 from io import BytesIO
+from src.widgets import Image
 
 
 
@@ -56,7 +57,7 @@ class MovieApi:
 
                     if image_url:
                         image_response = requests.get(image_url)
-                        image = Image.open(BytesIO(image_response.content))
+                        image = Image(light_image=img.open(BytesIO(image_response.content)))
                         if frame:
                             frame.add_item(title, image)
                 # if i >= end or exit flag is set
@@ -124,7 +125,7 @@ class MovieApi:
 
                     if image_url:
                         image_response = requests.get(image_url)
-                        image = Image.open(BytesIO(image_response.content))
+                        image = ImageImage.open(BytesIO(image_response.content))
                         if frame:
                             frame.add_item(title, image)
                 elif i>=end:

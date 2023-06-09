@@ -24,7 +24,7 @@ class Application(ctk.CTk):
         self.__setup_ui()
 
     def run(self) -> None:
-        self.__show_root_view(self.__root_views['main'])
+        self.__show_root_view(self.__root_views['login'])
 
         self.mainloop()
 

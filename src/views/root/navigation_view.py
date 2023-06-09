@@ -4,12 +4,14 @@ from src.services import Color
 
 
 class NavigationView(BaseRootView):
-    def __init__(self, master, **kwargs):
+    navigation_controller = None
+    def __init__(self, master, navigation_controller=None, **kwargs):
+        self.navigation_controller = navigation_controller
         super().__init__(master, fg_color=Color.GRAY_4.value, **kwargs)
         self.configure(height=70)
         
     def _setup_ui(self) -> None:
-        self.navigation_menu = NavigationMenu(master=self, width=500, height=40, corner_radius=0, fg_color='transparent')
+        self.navigation_menu = NavigationMenu(master=self, navigation_controller=self.navigation_controller, width=500, height=40, corner_radius=0, fg_color='transparent')
         self.navigation_menu.place(relx= 0.02, rely=0.5, anchor='w')
         
         self.search_bar = SearchBar(self, corner_radius=5, fg_color='transparent')
@@ -18,8 +20,7 @@ class NavigationView(BaseRootView):
         Label(self, text="", image=Image(image_name="profile_icon.png", size=(30, 30)), fg_color="transparent").place(relx=0.95, rely=0.38)
         
 
-    def set_controller(self, controller):
-        self.navigation_menu.controller = controller
+    
         
         
         

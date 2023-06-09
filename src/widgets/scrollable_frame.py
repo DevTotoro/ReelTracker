@@ -2,9 +2,10 @@ import customtkinter as ctk
 
 
 class ScrollableFrame(ctk.CTkScrollableFrame):
-    def __init__(self, master, **kwargs):
+    navigation_controller = None
+    def __init__(self, master, navigation_controller=None, **kwargs):
         super().__init__(master=master, **kwargs)
-
+        self.navigation_controller = navigation_controller
         self._setup_ui()
 
     # Private methods

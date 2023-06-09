@@ -3,14 +3,11 @@ import customtkinter as Ctk
 from src.services import Color
 
 class NavigationMenu(Frame):
-    controller = None
     def __init__(self, master, **kwargs):
         super().__init__(master=master, **kwargs)
         
-        self.__setup_ui()
-
     # Private methods
-    def __setup_ui(self) -> None:
+    def _setup_ui(self) -> None:
         
         self.tabs = {
             'Home': Ctk.CTkButton(self, text='Home', height=40, width=150, corner_radius=4, command=lambda tab_name='Home': self.button_clicked(tab_name), 
@@ -32,8 +29,10 @@ class NavigationMenu(Frame):
         for tab in self.tabs.keys():
             
             self.tabs[tab].configure(fg_color=Color.GRAY_3.value)
-            self.controller[tab].hide()
+            self.navigation_controller[tab].hide()
+            
+        self.navigation_controller['Details'].hide()
         
         self.tabs[tab_name].configure(fg_color=Color.GRAY_1.value)
-        self.controller[tab_name].show()
+        self.navigation_controller[tab_name].show()
         

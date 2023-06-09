@@ -1,10 +1,16 @@
 from src.widgets import  Label, Frame, TextBox, Image
 from src.services import Color
+from src.services import async_get
+from os import getenv
+import customtkinter as Ctk
+from PIL import Image as img
+from io import BytesIO
+import threading
 
 
 class SearchBar(Frame):
     search_frame = None
-    
+    lock = threading.Lock()
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
         
@@ -27,21 +33,58 @@ class SearchBar(Frame):
     def key_pressed(self,e):
         # case: search field empty after hitting backspace
         if len(self.search_field.get("current linestart","current lineend")) == 1 and ord(e.char) == 8:
-            print('search field cleared')
             if bool(self.search_frame.winfo_ismapped()):
                 self.search_frame.place_forget()  
         else:
             # case: empty field and press key except backspace
             if self.search_field.get("current linestart","current lineend") == "" and ord(e.char) != 8:
-               print('first key pressed')
-               # self.search_frame.clear()
+               self.search_frame.clear()
                self.search_frame.place(relx=0.54, rely=0.13)
             # case: we hit a key and none of the above cases hold
             elif self.search_field.get("current linestart","current lineend") != "" or ord(e.char) != 8:
-                print('another key pressed')
-                # self.search_frame.clear()
+                self.search_frame.clear()
             
-            # kill existing threads (this can be done in the wrapper)
-            # search for movies and series by name
-            # for movies in results:
-                # self.search_frame.add_item(image, name)
+            def search_callback(response):
+                data = response.json()
+                movies = data['movies']
+                series = data['series']
+                if 'results'in movies:
+                    results = movies['results']
+                    for movie in results[:3]:
+                        poster_path = movie['poster_path']
+                        base_image_url = 'https://image.tmdb.org/t/p/w154'  
+                        image_url = f'{base_image_url}{poster_path}' if poster_path else None
+                        
+                        def image_callback(response, name, id):
+                            with self.lock:
+                                image = Ctk.CTkImage(img.open(BytesIO(response.content)), size=(50, 73))
+                                self.search_frame.add_item(image, name, id)
+                                
+                        
+                        if image_url:
+                            # download image
+                            async_get(image_url, callback=lambda response, id=movie['id'], name=movie['title']: image_callback(response,name,id))
+                            
+                if 'results' in series:
+                    results = series['results']    
+                    for serie in results[:3]:
+                        poster_path = serie['poster_path']
+                        base_image_url = 'https://image.tmdb.org/t/p/w154'  
+                        image_url = f'{base_image_url}{poster_path}' if poster_path else None
+                        
+                        def image_callback(response, name, id):
+                            with self.lock:
+                                image = Ctk.CTkImage(img.open(BytesIO(response.content)), size=(50, 73))
+                                self.search_frame.add_item(image,name,id)
+                                
+                        
+                        if image_url:
+                            # download image
+                            async_get(image_url, callback=lambda response, id=serie['id'], name=serie['name']: image_callback(response ,name, id))
+
+
+            async_get(
+                url = f'{getenv("API_URL")}/search?query={self.search_field.get("current linestart","current lineend")+e.char}&page=1',
+                callback=search_callback
+            )
+           
